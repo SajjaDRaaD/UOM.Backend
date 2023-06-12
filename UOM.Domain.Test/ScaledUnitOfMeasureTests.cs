@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using UOM.Domain.Test.TestUtils;
 
 namespace UOM.Domain.Test
 {
@@ -26,13 +27,7 @@ namespace UOM.Domain.Test
         [InlineData(50,50000)]
         public void converts_value_to_base_dimension(decimal valueToConvert, decimal expected)
         {
-            var title = "Kilogram";
-            var symbol = "KG";
-            var scaleToBase = 1000;
-            var dimensionId = 1;
-
-            
-            var unitOfMeasure = new ScaledUnitOfMeasure(title, symbol, scaleToBase, dimensionId);
+            var unitOfMeasure = new ScaledUnitOfMeasureBuilder().WithScaledToBase(1000).Build();
             
             var result = unitOfMeasure.ConvertToBase(valueToConvert);
             result.Should().Be(expected);
@@ -44,13 +39,14 @@ namespace UOM.Domain.Test
         [InlineData(0,0)]
         public void converts_value_to_another_scaled_unit(decimal valueToConvert, decimal expected)
         {
-            var centimeter = new ScaledUnitOfMeasure("Centimeter","CM",0.01M,2);
-            var kilometer = new ScaledUnitOfMeasure("Kilometer", "KM", 1000, 3);
+            var centimeter = new ScaledUnitOfMeasureBuilder().WithTitle("Centimeter").WithScaledToBase(0.01M).Build();
+            var kilometer = new ScaledUnitOfMeasureBuilder().WithTitle("Kilometer").WithScaledToBase(1000M).Build();
 
             var valueInCentimeter = kilometer.Convert(centimeter,valueToConvert);
 
             valueInCentimeter.Should().Be(expected);
         }
 
+        
     }
 }
