@@ -20,8 +20,11 @@ namespace UOM.Domain.Test
             unitOfMeasure.DimensionId.Should().Be(dimensionId);
         }
 
-        [Fact]
-        public void converts_value_to_base_dimension()
+        [Theory]
+        [InlineData(5,5000)]
+        [InlineData(0.5,500)]
+        [InlineData(50,50000)]
+        public void converts_value_to_base_dimension(decimal valueToConvert, decimal expected)
         {
             var title = "Kilogram";
             var symbol = "KG";
@@ -31,8 +34,8 @@ namespace UOM.Domain.Test
             
             var unitOfMeasure = new ScaledUnitOfMeasure(title, symbol, scaleToBase, dimensionId);
             
-            var result = unitOfMeasure.ConvertToBase(0.5M);
-            result.Should().Be(500M);
+            var result = unitOfMeasure.ConvertToBase(valueToConvert);
+            result.Should().Be(expected);
         }
 
         [Theory]
